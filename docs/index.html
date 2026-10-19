@@ -108,9 +108,9 @@ inference technique, benchmarks it with seeded experiments, and reports
 honest numbers. No GPUs required. No hand-waving.</p>
 <a class="btn" href="#foundations">Explore the systems</a>
 <a class="btn ghost" href="nano-transformer/index.html">Start from first principles →</a>
-<div class="install"><code>pip install llm-inference-lab</code><span>The full library — nine systems, one import.</span></div>
+<div class="install"><code>pip install llm-inference-lab</code><span>The full library — ten systems, one import.</span></div>
 <div class="stats">
-<div><b>9</b><span>implemented systems</span></div>
+<div><b>10</b><span>implemented systems</span></div>
 <div><b>4</b><span>categories</span></div>
 <div><b>30+</b><span>experiments, all seeded</span></div>
 <div><b>100%</b><span>reproducible — one command each</span></div>
@@ -151,7 +151,11 @@ thousand concurrent requests. Pick a layer, then drill into any system.</p>
 <div class="card"><div class="tag">08 · Scheduling Lab</div>
 <h4><a href="sched-lab/index.html">Continuous batching vs chunked prefill vs preemption: a scheduling shootout</a></h4>
 <p>How a serving engine schedules requests across GPU iterations decides the latency every user feels. A single 4k-token prompt prefetched in one iteration stalls every in-f…</p>
-<div class="metric"><b>56x</b> lower mean TTFT continuous vs static · <b>82.8%</b> lower worst-case iter</div></div></div></div>
+<div class="metric"><b>56x</b> lower mean TTFT continuous vs static · <b>82.8%</b> lower worst-case iter</div></div>
+<div class="card"><div class="tag">10 · LLM Mesh</div>
+<h4><a href="llm-mesh/index.html">Many specialized models, one routing layer: route, orchestrate, aggregate</a></h4>
+<p>One frontier model for every request is the most expensive way to serve mixed workloads: you pay frontier prices for chit-chat, wait on a reasoning model's latency for a …</p>
+<div class="metric"><b>0.943</b> quality at <b>0.38x</b> the cost of a single frontier model</div></div></div></div>
 <div class="cat" id="efficiency">
 <h3><span class="dot" style="background:#f0b35e"></span>Efficiency Frontiers</h3>
 <p class="desc">Do more with less: squeeze quality out of fewer bits, and capacity out of sparse experts.</p>
@@ -184,6 +188,6 @@ thousand concurrent requests. Pick a layer, then drill into any system.</p>
 </div></div></section>
 
 <footer><div class="wrap">
-<div>LLM Inference Engine — nine advanced inference systems from first principles,<br>implemented in numpy, benchmarked, and reproducible.</div>
+<div>LLM Inference Engine — ten advanced inference systems from first principles,<br>implemented in numpy, benchmarked, and reproducible.</div>
 <div>Built by Ranadhir Ghosh · MIT License</div>
 </div></footer></body></html>

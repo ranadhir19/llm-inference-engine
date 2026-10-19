@@ -251,6 +251,38 @@ drift — central enforcement plus versioning is required.
 **Use when** designing agent guardrails, scoping agent authority, or
 answering "who authorized this agent to do that?" with numbers.
 
+## 10. LLM Mesh — many models, one routing layer
+
+**Why.** No single model is best at everything: the frontier generalist is
+expensive, the reasoning specialist is slow, the cheap chat model is weak
+at math. An LLM mesh treats models like a service mesh treats services —
+a registry of specialists, a semantic router, an orchestrator that fans
+work out in parallel and aggregates, and a self-improving routing policy
+that learns which model actually wins per task type.
+
+```python
+from llm_inference_engine.llm_mesh import models, router, orchestrator, bandit
+
+reg = models.default_registry()
+r = router.SemanticRouter(reg, policy="quality-first")
+res = orchestrator.run("Explain this chart and summarize the report", r, reg)
+print(res.quality, res.cost_usd, res.trace.model)
+```
+
+**Headline numbers.** On 400 mixed requests, quality-first mesh routing
+reaches mean quality **0.9430** vs 0.9150 for the frontier model alone, at
+**$1.92 vs $5.00 total — 62% cheaper**. Semantic router: **1.0000**
+accuracy on held-out queries. Parallel fan-out: **1.64x** speedup. UCB1
+router regret falls 0.1566 → 0.0296 over 3000 requests. Kill the vision
+model mid-run and mesh success stays **1.000** vs 0.750 for static routing.
+The honest tradeoff: quality-first p95 latency is higher (6395 vs 4956 ms)
+because reasoning goes to the slowest specialist — the routing policy
+chooses which axis you optimize.
+
+**Use when** you serve heterogeneous workloads and want the cost/quality
+frontier instead of one-model-fits-all, or when you need routing that
+improves itself from observed outcomes.
+
 ## When to use which
 
 | If your problem is… | Start with |
@@ -262,6 +294,7 @@ answering "who authorized this agent to do that?" with numbers.
 | "Model too big / memory bandwidth too high" | 05 Quant Lab → 07 Roofline |
 | "MoE dropping tokens or imbalanced" | 06 MoE Router |
 | "Agents doing things they shouldn't" | 09 Remit Drift |
+| "One model does everything, badly and expensively" | 10 LLM Mesh |
 
 ## Reproducibility
 

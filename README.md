@@ -1,6 +1,6 @@
 # LLM Inference Engine
 
-Nine advanced LLM inference systems, implemented from first principles in
+Ten advanced LLM inference systems, implemented from first principles in
 numpy, benchmarked with seeded experiments, and reproducible on any laptop.
 
 **Landing site:** https://ranadhir19.github.io/llm-inference-engine/
@@ -19,9 +19,10 @@ numpy, benchmarked with seeded experiments, and reproducible on any laptop.
 | 07 | [Roofline Analysis](07-roofline/) | Where is the wall — memory or compute — and what does fusion move? |
 | 08 | [Scheduling Lab](08-sched-lab/) | Continuous vs chunked vs preemptive scheduling: who feels what? |
 | 09 | [Remit Drift](09-remit-drift/) | When agents drift from their remit — measured per type, governed by a policy engine |
+| 10 | [LLM Mesh](10-llm-mesh/) | Many specialized models, one routing layer: route, orchestrate, aggregate |
 
 Four categories: **From First Principles** (01, 07) · **Serving at Scale**
-(02, 03, 04, 08) · **Efficiency Frontiers** (05, 06) · **Agent Governance** (09).
+(02, 03, 04, 08, 10) · **Efficiency Frontiers** (05, 06) · **Agent Governance** (09).
 
 ## Results showcase
 
@@ -45,6 +46,10 @@ Four categories: **From First Principles** (01, 07) · **Serving at Scale**
 - **Remit drift:** all 8 divergence types grow ungoverned (functional KL
   **5.55**); policy engine bounds every one to **0.000** — finance agent's
   vendor/bank writes denied **175/175**.
+- **LLM Mesh:** quality-first mesh routing reaches **0.943** mean quality vs
+  0.915 for a single frontier model at **$1.92 vs $5.00 (62% cheaper)**;
+  UCB1 self-improving router cuts regret 0.1566 → 0.0296; failover keeps
+  success at **1.000** when a model goes down.
 
 Every number above comes from an actual seeded run in the repo's
 `results/` folders.
@@ -84,8 +89,9 @@ numbers are asserted before anything is written.
 ```
 src/llm_inference_engine/   # the pip package: transformer, paged_kv,
                             #   spec_decode, disagg_serve, quant_lab,
-                            #   moe_router, roofline, sched_lab
-01-nano-transformer/ ... 08-sched-lab/
+                            #   moe_router, roofline, sched_lab,
+                            #   remit_drift, llm_mesh
+01-nano-transformer/ ... 10-llm-mesh/
   experiments/  results/  tests/  README.md
 examples/                   # one runnable quickstart per project
 docs/                       # landing site (build.py) + user-guide.md

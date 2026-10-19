@@ -308,6 +308,25 @@ def svg_remit():
     b.append('<text x="300" y="336" text-anchor="middle" fill="#99a4ba" font-size="11">D(t) = Distance(A(t), R): validated before execution, divergence stays bounded</text>')
     return svg_wrap("\n".join(b), 600, 360)
 
+def svg_mesh():
+    b = [SVG_DEFS]
+    b.append(box(230, 14, 140, 52, "Semantic router", "task type → best model", fs=12,
+                 fill="#1a2b26", stroke="#3f7a68"))
+    models = [("frontier-1", "generalist"), ("reasoner-r1", "reasoning"),
+              ("coder-cl", "coding"), ("vision-qw", "vision"), ("general-8b", "cheap chat")]
+    for i, (m, role) in enumerate(models):
+        x = 14 + i * 116
+        b.append(box(x, 110, 106, 54, m, role, fs=10))
+        b.append(arrow(300, 66, x + 53, 108, color="#6ea8fe", marker="arra"))
+    b.append(box(180, 208, 240, 56, "Orchestrator", "parallel fan-out · aggregate · failover", fs=12,
+                 fill="#1a2436", stroke="#6ea8fe"))
+    for i in range(5):
+        x = 14 + i * 116 + 53
+        b.append(arrow(x, 164, 300, 206, color="#99a4ba", marker="arra"))
+    b.append('<text x="300" y="300" text-anchor="middle" fill="#99a4ba" font-size="11">UCB1 router learns per-task winners; quality 0.943 at 0.38x the cost of one frontier model</text>')
+    b.append('<text x="300" y="322" text-anchor="middle" fill="#99a4ba" font-size="11">model outage → automatic failover, success stays 1.000</text>')
+    return svg_wrap("\n".join(b), 600, 360)
+
 # ---------------------------------------------------------------------------
 # README parsing (Problem / Current gap / Solution / Insights)
 # ---------------------------------------------------------------------------
@@ -548,6 +567,32 @@ dict(
 <tr><td>Support tickets: close-now rate</td><td>0.71, satisfaction 0.38</td><td><b class="hl">0.00</b>, satisfaction <b class="hl">0.95</b></td></tr></table>
 <p>Seed 11, T=300 steps, two runs byte-identical. Ablation: authorization checks catch 4 types, human approval 3, tool allow-lists / planner constraints / policy engine 1-2 each; auditing detects 7 of 8 (detect-only). A written remit alone does <b>not</b> contain functional drift — repeated denied requests are silently absorbed (normalization of deviance); central enforcement plus versioning is required.</p>""",
 ),
+dict(
+ slug="llm-mesh", num="10", name="LLM Mesh",
+ tagline="Many specialized models, one routing layer: route, orchestrate, aggregate",
+ category="serving", repo="10-llm-mesh", arch=svg_mesh,
+ metric="<b>0.943</b> quality at <b>0.38x</b> the cost of a single frontier model",
+ impl_tree="""src/llm_inference_engine/llm_mesh/
+  models.py         # registry of 5 specialists: quality/latency/price profiles
+  router.py         # TF-IDF semantic router + 4 routing policies
+  orchestrator.py   # decomposition, parallel dispatch, failover
+  bandit.py         # UCB1 self-improving router
+  observability.py  # per-request traces: latency, tokens, cost
+  workflows.py      # fraud-claim + chart+report pipelines
+10-llm-mesh/
+  experiments/run_experiments.py   # 6 experiments, seeded (seed 7)
+  results/            # results.md + charts.png (generated)""",
+ results_table="""
+<table class="res"><tr><th>400 mixed requests</th><th>Mean quality</th><th>Total cost</th><th>p95 latency</th></tr>
+<tr><td>frontier-1 only</td><td>0.9150</td><td>$5.00</td><td>4956 ms</td></tr>
+<tr><td><b>mesh (quality-first)</b></td><td><b class="hl">0.9430</b></td><td><b class="hl">$1.92</b></td><td>6395 ms</td></tr></table>
+<table class="res"><tr><th>Routing policy</th><th>Quality</th><th>Cost</th></tr>
+<tr><td>quality-first</td><td>0.944</td><td>$1.92</td></tr>
+<tr><td>balanced</td><td>0.847</td><td>$0.43</td></tr>
+<tr><td>latency-first</td><td>0.783</td><td>$0.33</td></tr>
+<tr><td>cost-first</td><td>0.782</td><td>$0.33</td></tr></table>
+<p>Seed 7, 3 runs byte-identical. Semantic router: 1.0000 accuracy on 24 held-out queries. Parallel orchestration: 1.64x speedup (p95 6947 ms → 4486 ms). UCB1 regret 0.1566 → 0.0296 over 3000 requests. Failover: 1.000 vs 0.750 success when vision-qw goes down. The quality win is honest about its price: mesh p95 latency is higher because quality-first routes reasoning to the slowest specialist — the routing policy chooses which axis you optimize.</p>""",
+),
 ]
 
 CATEGORIES = [
@@ -588,7 +633,7 @@ def page_head(title):
 
 PAGE_FOOT = """
 <footer><div class="wrap">
-<div>LLM Inference Engine — nine advanced inference systems from first principles,<br>implemented in numpy, benchmarked, and reproducible.</div>
+<div>LLM Inference Engine — ten advanced inference systems from first principles,<br>implemented in numpy, benchmarked, and reproducible.</div>
 <div>Built by Ranadhir Ghosh · MIT License</div>
 </div></footer></body></html>"""
 
@@ -620,9 +665,9 @@ inference technique, benchmarks it with seeded experiments, and reports
 honest numbers. No GPUs required. No hand-waving.</p>
 <a class="btn" href="#foundations">Explore the systems</a>
 <a class="btn ghost" href="nano-transformer/index.html">Start from first principles →</a>
-<div class="install"><code>pip install llm-inference-lab</code><span>The full library — nine systems, one import.</span></div>
+<div class="install"><code>pip install llm-inference-lab</code><span>The full library — ten systems, one import.</span></div>
 <div class="stats">
-<div><b>9</b><span>implemented systems</span></div>
+<div><b>10</b><span>implemented systems</span></div>
 <div><b>4</b><span>categories</span></div>
 <div><b>30+</b><span>experiments, all seeded</span></div>
 <div><b>100%</b><span>reproducible — one command each</span></div>
