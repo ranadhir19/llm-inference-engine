@@ -1,6 +1,6 @@
 # LLM Inference Engine
 
-Eight advanced LLM inference systems, implemented from first principles in
+Nine advanced LLM inference systems, implemented from first principles in
 numpy, benchmarked with seeded experiments, and reproducible on any laptop.
 
 **Landing site:** https://ranadhir19.github.io/llm-inference-engine/
@@ -18,9 +18,10 @@ numpy, benchmarked with seeded experiments, and reproducible on any laptop.
 | 06 | [MoE Router](06-moe-router/) | How many tokens does expert capacity silently drop? |
 | 07 | [Roofline Analysis](07-roofline/) | Where is the wall — memory or compute — and what does fusion move? |
 | 08 | [Scheduling Lab](08-sched-lab/) | Continuous vs chunked vs preemptive scheduling: who feels what? |
+| 09 | [Remit Drift](09-remit-drift/) | When agents drift from their remit — measured per type, governed by a policy engine |
 
-Three categories: **From First Principles** (01, 07) · **Serving at Scale**
-(02, 03, 04, 08) · **Efficiency Frontiers** (05, 06).
+Four categories: **From First Principles** (01, 07) · **Serving at Scale**
+(02, 03, 04, 08) · **Efficiency Frontiers** (05, 06) · **Agent Governance** (09).
 
 ## Results showcase
 
@@ -41,6 +42,9 @@ Three categories: **From First Principles** (01, 07) · **Serving at Scale**
   INT8 dequant+GEMM gives **1.831x** decode step.
 - **Scheduling:** continuous batching cuts high-load TTFT **56x mean /
   42x p99**; throughput identical — scheduling moves latency, not capacity.
+- **Remit drift:** all 8 divergence types grow ungoverned (functional KL
+  **5.55**); policy engine bounds every one to **0.000** — finance agent's
+  vendor/bank writes denied **175/175**.
 
 Every number above comes from an actual seeded run in the repo's
 `results/` folders.

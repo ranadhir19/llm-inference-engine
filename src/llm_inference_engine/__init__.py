@@ -1,6 +1,6 @@
 """LLM Inference Engine — advanced LLM inference systems from first principles.
 
-Eight self-contained, seeded, reproducible projects (CPU/numpy only):
+Nine self-contained, seeded, reproducible projects (CPU/numpy only):
 
 - ``transformer``    — LLaMA-style decoder inference from scratch
   (RMSNorm, RoPE, grouped-query attention, SwiGLU, KV cache)
@@ -11,6 +11,8 @@ Eight self-contained, seeded, reproducible projects (CPU/numpy only):
 - ``moe_router``     — mixture-of-experts routing simulator
 - ``roofline``       — roofline performance model for inference ops
 - ``sched_lab``      — advanced request scheduling simulator
+- ``remit_drift``    — divergence of remit in multi-agent systems:
+  remit as a first-class object, 8 drift types, policy engine
 
 All benchmarks are simulation-based with seeded RNG: they quantify
 architectural and algorithmic tradeoffs, not production GPU behavior.
@@ -27,6 +29,7 @@ __all__ = [
     "moe_router",
     "roofline",
     "sched_lab",
+    "remit_drift",
 ]
 
 from llm_inference_engine import (
@@ -34,6 +37,7 @@ from llm_inference_engine import (
     moe_router,
     paged_kv,
     quant_lab,
+    remit_drift,
     roofline,
     sched_lab,
     spec_decode,

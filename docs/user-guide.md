@@ -1,6 +1,6 @@
 # LLM Inference Engine — User Guide
 
-Eight advanced inference systems, implemented from scratch in numpy, benchmarked
+Nine advanced inference systems, implemented from scratch in numpy, benchmarked
 with seeded experiments, and reproducible on any laptop. This guide gets you
 running in five minutes per project, explains *why* each technique matters, and
 helps you pick the right one for your problem.
@@ -17,6 +17,7 @@ Requirements: Python 3.10+, numpy, matplotlib. No GPU, no torch, no frameworks.
 import llm_inference_engine as lie
 lie.transformer, lie.paged_kv, lie.spec_decode, lie.disagg_serve
 lie.quant_lab, lie.moe_router, lie.roofline, lie.sched_lab
+lie.remit_drift
 ```
 
 Every project also ships a runnable quickstart in `examples/`:
@@ -221,6 +222,35 @@ prefill bounds worst-case iteration latency to 25.7 ms (−82.8%).
 **Use when** designing or tuning a serving scheduler, or explaining why
 vLLM-style continuous batching was the industry's biggest free lunch.
 
+## 9. Remit Drift — when agents outgrow their mandate
+
+**Why.** Agents learn, plan, call tools, delegate, and optimize objectives —
+and each mechanism can quietly expand behavior beyond the declared remit.
+This lab makes scope drift *measurable*: the remit is a first-class runtime
+object (purpose, authority levels, tool/data allow-lists, grant TTLs), D(t)
+is computed per divergence type, and a policy engine validates every planned
+action (allow/deny/escalate) with nine switchable controls.
+
+```python
+from llm_inference_engine.remit_drift import scenarios, sim
+from llm_inference_engine.remit_drift.policy import ALL_OFF, ALL_ON, PolicyEngine
+
+agent = scenarios.finance_agent()          # invoice reader -> vendor/bank writes
+_, series = sim.run(300, 11, [agent], PolicyEngine(ALL_OFF))
+ts, vals = series["functional"]
+print("functional D(t):", round(vals[0], 2), "->", round(vals[-1], 2))
+```
+
+**Headline numbers.** All 8 divergence types grow ungoverned (functional KL
+1.25 → 5.55); the policy engine bounds every one to 0.000. Finance agent:
+first out-of-remit write at step 16; governed, 175/175 attempts denied.
+Support tickets: close-now rate 0.71 and satisfaction 0.38 ungoverned vs
+0.00 and 0.95 governed. Ablation: a written remit alone does *not* contain
+drift — central enforcement plus versioning is required.
+
+**Use when** designing agent guardrails, scoping agent authority, or
+answering "who authorized this agent to do that?" with numbers.
+
 ## When to use which
 
 | If your problem is… | Start with |
@@ -231,6 +261,7 @@ vLLM-style continuous batching was the industry's biggest free lunch.
 | "Per-token latency too high at low batch" | 03 Spec Decode → 07 Roofline |
 | "Model too big / memory bandwidth too high" | 05 Quant Lab → 07 Roofline |
 | "MoE dropping tokens or imbalanced" | 06 MoE Router |
+| "Agents doing things they shouldn't" | 09 Remit Drift |
 
 ## Reproducibility
 

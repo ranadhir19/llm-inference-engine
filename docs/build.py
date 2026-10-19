@@ -291,6 +291,23 @@ def svg_sched():
     b.append('<text x="300" y="330" text-anchor="middle" fill="#99a4ba" font-size="11">iteration-level admission is the dominant win (42x p99 TTFT)</text>')
     return svg_wrap("\n".join(b), 600, 360)
 
+def svg_remit():
+    b = [SVG_DEFS]
+    b.append(box(230, 14, 140, 52, "Declared remit R", "purpose · authority · limits", fs=12,
+                 fill="#1a2b26", stroke="#3f7a68"))
+    types = ["functional", "authority", "goal", "planning",
+             "tool", "information", "collaboration", "temporal"]
+    for i, tp in enumerate(types):
+        row, col = divmod(i, 4)
+        x, y = 20 + col * 145, 110 + row * 64
+        b.append(box(x, y, 130, 50, tp, "D(t) grows", fs=11))
+        b.append(arrow(300, 66, x + 65, y, color="#f08787", marker="arr"))
+    b.append(box(180, 252, 240, 56, "Policy engine", "allow · deny · escalate", fs=13,
+                 fill="#1a2436", stroke="#6ea8fe"))
+    b.append(arrow(300, 238, 300, 250, color="#6ea8fe", marker="arra"))
+    b.append('<text x="300" y="336" text-anchor="middle" fill="#99a4ba" font-size="11">D(t) = Distance(A(t), R): validated before execution, divergence stays bounded</text>')
+    return svg_wrap("\n".join(b), 600, 360)
+
 # ---------------------------------------------------------------------------
 # README parsing (Problem / Current gap / Solution / Insights)
 # ---------------------------------------------------------------------------
@@ -502,6 +519,35 @@ dict(
 <tr><td><b>continuous</b></td><td><b class="hl">15.0 ms</b></td><td><b class="hl">57.5 ms</b></td><td>1861 tok/s</td></tr></table>
 <p>1500 requests/cell, seed 61, 3 runs byte-identical. Scheduling moves latency, not capacity: throughput is identical. Chunked prefill bounds worst-case iteration latency to 25.7 ms vs 149.5 ms (−82.8%). Priority preemption: 14 preempts cost 4.88% recompute for −87.9% short-request p99.</p>""",
 ),
+dict(
+ slug="remit-drift", num="09", name="Remit Drift",
+ tagline="Divergence of remit in multi-agent systems: measured per type, governed by a policy engine",
+ category="governance", repo="09-remit-drift", arch=svg_remit,
+ metric="All <b>8 drift types</b> grow ungoverned · <b>0.000</b> max D(t) governed",
+ impl_tree="""src/llm_inference_engine/remit_drift/
+  remit.py          # Remit, Grant: the mandate as a runtime object
+  policy.py         # PolicyEngine: allow/deny/escalate, 9 controls
+  metrics.py        # D(t): KL, violation rates, proxy/true gap
+  sim.py            # drift emerges from pressure + creep
+  scenarios.py      # 8 specialists, finance agent, support demo
+09-remit-drift/
+  experiments/run_experiments.py   # 5 experiments, seeded (seed 11)
+  results/            # results.md + charts.png (generated)""",
+ results_table="""
+<table class="res"><tr><th>Divergence type</th><th>D(300) ungoverned</th><th>D(300) governed</th></tr>
+<tr><td>functional (KL)</td><td>5.550</td><td><b class="hl">0.000</b></td></tr>
+<tr><td>authority</td><td>1.000</td><td><b class="hl">0.000</b></td></tr>
+<tr><td>goal (proxy/true gap)</td><td>0.800</td><td><b class="hl">0.000</b></td></tr>
+<tr><td>planning</td><td>1.000</td><td><b class="hl">0.000</b></td></tr>
+<tr><td>tool</td><td>1.000</td><td><b class="hl">0.000</b></td></tr>
+<tr><td>information</td><td>1.000</td><td><b class="hl">0.000</b></td></tr>
+<tr><td>collaboration</td><td>0.680</td><td><b class="hl">0.000</b></td></tr>
+<tr><td>temporal</td><td>1.000</td><td><b class="hl">0.000</b></td></tr></table>
+<table class="res"><tr><th>Scenario</th><th>Ungoverned</th><th>Governed</th></tr>
+<tr><td>Finance agent: first out-of-remit use</td><td>steps 16 / 26 / 38</td><td><b class="hl">0 executed</b> (175 denied)</td></tr>
+<tr><td>Support tickets: close-now rate</td><td>0.71, satisfaction 0.38</td><td><b class="hl">0.00</b>, satisfaction <b class="hl">0.95</b></td></tr></table>
+<p>Seed 11, T=300 steps, two runs byte-identical. Ablation: authorization checks catch 4 types, human approval 3, tool allow-lists / planner constraints / policy engine 1-2 each; auditing detects 7 of 8 (detect-only). A written remit alone does <b>not</b> contain functional drift — repeated denied requests are silently absorbed (normalization of deviance); central enforcement plus versioning is required.</p>""",
+),
 ]
 
 CATEGORIES = [
@@ -514,6 +560,9 @@ dict(slug="serving", name="Serving at Scale",
 dict(slug="efficiency", name="Efficiency Frontiers",
      color="#f0b35e",
      desc="Do more with less: squeeze quality out of fewer bits, and capacity out of sparse experts."),
+dict(slug="governance", name="Agent Governance",
+     color="#f08787",
+     desc="The systems around the model: when agents drift from their remit, measure it per type and contain it with a policy engine."),
 ]
 
 # ---------------------------------------------------------------------------
@@ -539,7 +588,7 @@ def page_head(title):
 
 PAGE_FOOT = """
 <footer><div class="wrap">
-<div>LLM Inference Engine — eight advanced inference systems from first principles,<br>implemented in numpy, benchmarked, and reproducible.</div>
+<div>LLM Inference Engine — nine advanced inference systems from first principles,<br>implemented in numpy, benchmarked, and reproducible.</div>
 <div>Built by Ranadhir Ghosh · MIT License</div>
 </div></footer></body></html>"""
 
@@ -564,17 +613,17 @@ def index_page():
     return (page_head("LLM Inference Engine") + nav() + f"""
 <div class="hero"><div class="wrap">
 <div class="kicker">Portfolio · LLM Inference Systems</div>
-<h1>Eight systems for how LLMs actually run.</h1>
+<h1>Nine systems for how LLMs actually run.</h1>
 <p class="sub">From a transformer built from scratch in numpy to the scheduling
 policies that decide what users feel — each project implements an advanced
 inference technique, benchmarks it with seeded experiments, and reports
 honest numbers. No GPUs required. No hand-waving.</p>
 <a class="btn" href="#foundations">Explore the systems</a>
 <a class="btn ghost" href="nano-transformer/index.html">Start from first principles →</a>
-<div class="install"><code>pip install llm-inference-lab</code><span>The full library — eight systems, one import.</span></div>
+<div class="install"><code>pip install llm-inference-lab</code><span>The full library — nine systems, one import.</span></div>
 <div class="stats">
-<div><b>8</b><span>implemented systems</span></div>
-<div><b>3</b><span>categories</span></div>
+<div><b>9</b><span>implemented systems</span></div>
+<div><b>4</b><span>categories</span></div>
 <div><b>30+</b><span>experiments, all seeded</span></div>
 <div><b>100%</b><span>reproducible — one command each</span></div>
 </div></div></div>

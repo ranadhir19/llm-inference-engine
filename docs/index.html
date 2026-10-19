@@ -97,21 +97,21 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 </style></head><body>
 <nav class="top"><div class="wrap">
 <a class="brand" href="index.html">LLM Inference <span>Engine</span></a>
-<div class="links"><a href="index.html#foundations">From First Principles</a><a href="index.html#serving">Serving at Scale</a><a href="index.html#efficiency">Efficiency Frontiers</a><a href="https://github.com/ranadhir19/llm-inference-engine/blob/main/docs/user-guide.md">User Guide ↗</a><a href="https://github.com/ranadhir19/llm-inference-engine">GitHub ↗</a></div>
+<div class="links"><a href="index.html#foundations">From First Principles</a><a href="index.html#serving">Serving at Scale</a><a href="index.html#efficiency">Efficiency Frontiers</a><a href="index.html#governance">Agent Governance</a><a href="https://github.com/ranadhir19/llm-inference-engine/blob/main/docs/user-guide.md">User Guide ↗</a><a href="https://github.com/ranadhir19/llm-inference-engine">GitHub ↗</a></div>
 </div></nav>
 <div class="hero"><div class="wrap">
 <div class="kicker">Portfolio · LLM Inference Systems</div>
-<h1>Eight systems for how LLMs actually run.</h1>
+<h1>Nine systems for how LLMs actually run.</h1>
 <p class="sub">From a transformer built from scratch in numpy to the scheduling
 policies that decide what users feel — each project implements an advanced
 inference technique, benchmarks it with seeded experiments, and reports
 honest numbers. No GPUs required. No hand-waving.</p>
 <a class="btn" href="#foundations">Explore the systems</a>
 <a class="btn ghost" href="nano-transformer/index.html">Start from first principles →</a>
-<div class="install"><code>pip install llm-inference-lab</code><span>The full library — eight systems, one import.</span></div>
+<div class="install"><code>pip install llm-inference-lab</code><span>The full library — nine systems, one import.</span></div>
 <div class="stats">
-<div><b>8</b><span>implemented systems</span></div>
-<div><b>3</b><span>categories</span></div>
+<div><b>9</b><span>implemented systems</span></div>
+<div><b>4</b><span>categories</span></div>
 <div><b>30+</b><span>experiments, all seeded</span></div>
 <div><b>100%</b><span>reproducible — one command each</span></div>
 </div></div></div>
@@ -164,6 +164,14 @@ thousand concurrent requests. Pick a layer, then drill into any system.</p>
 <h4><a href="moe-router/index.html">Expert routing simulator: capacity factor, token dropping, expert parallelism</a></h4>
 <p>A mixture-of-experts (MoE) layer promises the capacity of a huge model at the compute cost of a small one: each token is processed by only top_k of E experts. In practice…</p>
 <div class="metric">Balanced gating drops <b>9.3%</b> vs <b>61%</b> skewed @CF=1.0</div></div></div></div>
+<div class="cat" id="governance">
+<h3><span class="dot" style="background:#f08787"></span>Agent Governance</h3>
+<p class="desc">The systems around the model: when agents drift from their remit, measure it per type and contain it with a policy engine.</p>
+<div class="cards">
+<div class="card"><div class="tag">09 · Remit Drift</div>
+<h4><a href="remit-drift/index.html">Divergence of remit in multi-agent systems: measured per type, governed by a policy engine</a></h4>
+<p>Agentic systems learn, plan, call tools, delegate, spawn subagents, and optimize objectives. Each mechanism can quietly expand behavior beyond the intended mandate: a cal…</p>
+<div class="metric">All <b>8 drift types</b> grow ungoverned · <b>0.000</b> max D(t) governed</div></div></div></div>
 </div></section>
 <section><div class="wrap">
 <h2 class="sec">How to read a project</h2>
@@ -176,6 +184,6 @@ thousand concurrent requests. Pick a layer, then drill into any system.</p>
 </div></div></section>
 
 <footer><div class="wrap">
-<div>LLM Inference Engine — eight advanced inference systems from first principles,<br>implemented in numpy, benchmarked, and reproducible.</div>
+<div>LLM Inference Engine — nine advanced inference systems from first principles,<br>implemented in numpy, benchmarked, and reproducible.</div>
 <div>Built by Ranadhir Ghosh · MIT License</div>
 </div></footer></body></html>
