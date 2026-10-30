@@ -6,6 +6,14 @@ numpy, benchmarked with seeded experiments, and reproducible on any laptop.
 **Landing site:** https://ranadhir19.github.io/llm-inference-engine/
 · **Install:** `pip install llm-inference-lab`
 
+## Watch it built
+
+The systems in this repo are built and measured on camera at **[The Architect's AI Workshop](https://www.youtube.com/@ArchitectsAIWorkshop)** — *first principles on the whiteboard, built live in the editor, measured honestly.* Browse the episodes: [youtube.com/@ArchitectsAIWorkshop/videos](https://www.youtube.com/@ArchitectsAIWorkshop/videos)
+
+Episodes from this repo:
+
+- [81.51% of This KV Cache Was Reserved for Nothing](https://youtu.be/hQoqXaM8MR8) — paged-kv
+
 ## The systems
 
 | # | Project | What it answers |
